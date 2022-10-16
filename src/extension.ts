@@ -45,11 +45,13 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.workspace.findFiles('tsconfig.json').then((value) => {
       if (!value.length) {
         // in order not to show terminal can be null warning, I added "?"
-        terminal?.sendText(`echo "${tsconfig.replace(/\"/g, '\\"')}" >> tsconfig.json`);
+        terminal?.sendText(`echo "${tsconfig.replace(/\"/g, '\\"')}" >> tsconfig.json \ntsc`);
         vscode.window.showInformationMessage('tsconfig.json was created!');
       }
+      else {
+        terminal?.sendText('tsc');
+      }
     });
-    terminal.sendText('tsc');
   });
 
   const button =  vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
