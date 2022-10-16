@@ -1,8 +1,14 @@
 # tsc-runner README
 
-This is the README for your extension "tsc-runner". After writing up a brief description, we recommend including the following sections.
+Push the button to compile .ts files.
 
 ## Features
+
+* When there is .ts file, "tsc" button will appear in the status bar below.
+
+* Push it and automaticaly run ```$tsc``` command to compile all .ts files.
+
+* When there is no ```tsconfig.json```, it will be created in the root directory before compiling.
 
 Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
 

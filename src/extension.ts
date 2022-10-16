@@ -11,14 +11,13 @@ export function activate(context: vscode.ExtensionContext) {
   // This line of code will only be executed once when your extension is activated
   console.log('Congratulations, your extension "tsc-runner" is now active!');
 
-  let terminal: vscode.Terminal | null = null;
+  let terminal: vscode.Terminal | null;
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
   let disposable = vscode.commands.registerCommand('tsc-compile.tscrunner', () => {
     // The code you place here will be executed every time your command is executed
     // Display a message box to the user
-    vscode.window.showInformationMessage('Hello World from Tsc_Runner!');
 
     const tsconfig = `{
   "compilerOptions": {
@@ -37,20 +36,29 @@ export function activate(context: vscode.ExtensionContext) {
   }
 }`;
 
-    // If there is no tsconfig.json, create one
-    // Then run compile
-    if (!terminal) {
-      terminal = vscode.window.createTerminal();
-    }
-    if (!existsSync(`${vscode.workspace.workspaceFolders}/.tsconfig.json`)) {
-      const command = `echo "${tsconfig.replace(/\"/g, '\\"')}" >> tsconfig.json`;
-      terminal.sendText(command);
-    }
-    terminal.sendText('tsc');
+    // Open another terminal and show it
+    terminal = terminal ?? vscode.window.createTerminal();
+    terminal.show();
     
-
-    vscode.window.showInformationMessage('Compiled!');
+    // If there is no tsconfig.json, create it
+    // Then run compile
+    vscode.workspace.findFiles('tsconfig.json').then((value) => {
+      if (!value.length) {
+        // in order not to show terminal can be null warning, I added "?"
+        terminal?.sendText(`echo "${tsconfig.replace(/\"/g, '\\"')}" >> tsconfig.json`);
+        vscode.window.showInformationMessage('tsconfig.json was created!');
+      }
+    });
+    terminal.sendText('tsc');
   });
+
+  const button =  vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+  button.command = 'tsc-compile.tscrunner';
+  button.color = new vscode.ThemeColor('#ff00ff');
+  button.tooltip = 'Run $tsc to compile.\n If there is no tsconfig.json, create it at first.';
+  button.text = 'tsc';
+  button.show();
+  context.subscriptions.push(button);
 
   context.subscriptions.push(disposable);
 }
