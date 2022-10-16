@@ -10,14 +10,13 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:tsc-runner.helloWorld",
-    "onLanguage:typescript"
+    "onCommand:tsc-compile.tscrunner"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "tsc-runner.helloWorld",
+        "command": "tsc-compile.tscrunner",
         "title": "Hello World"
       }
     ]
